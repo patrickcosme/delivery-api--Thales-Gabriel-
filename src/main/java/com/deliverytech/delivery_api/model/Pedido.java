@@ -1,11 +1,17 @@
 package com.deliverytech.delivery_api.model;
 
-import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -17,25 +23,27 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String numero_pedido;
+    @Column(name = "numero_pedido", length = 20, nullable = false)
+    private String numeroPedido;
 
-    private String data_pedido;
+    @Column(name = "data_pedido")
+    private LocalDateTime dataPedido;
 
+    @Column(name = "status", length = 20)
     private String status;
 
-    private String valor_total;
+    @Column(name = "valor_total", precision = 10, scale = 2)
+    private BigDecimal valorTotal;
 
+    @Column(name = "observacoes", length = 200)
     private String observacoes;
 
-    private String cliente_id;
+    @Column(name = "cliente_id")
+    private Long clienteId;
 
-    private String restaurante_id;
+    @Column(name = "restaurante_id")
+    private Long restauranteId;
 
+    @Column(name = "itens", length = 200)
     private String itens;
-
-
-    @Column(name = "data_cadastro")
-    private LocalDateTime dataCadastro;
-
-
 }

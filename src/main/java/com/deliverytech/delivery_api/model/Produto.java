@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Entity
 @Data
@@ -21,22 +20,16 @@ public class Produto {
 
     private String descricao;
 
-    private String preco;
+    private BigDecimal preco;
 
     private String categoria;
 
-    private String restaurante_id;
-
-
-
-    @Column(name = "data_cadastro")
-    private LocalDateTime dataCadastro;
-    @Column(nullable = true)
     private Boolean disponivel;
 
-    public void inativar() {
+    @Column(name = "restaurante_id")
+    private Long restauranteId;
+
+    public void indisponibilizar() {
         this.disponivel = false;
     }
-
-
 }

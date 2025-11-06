@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Entity
 @Data
@@ -25,20 +24,14 @@ public class Restaurante {
 
     private String telefone;
 
-    private String taxa_entrega;
+    @Column(name = "taxa_entrega")
+    private BigDecimal taxaEntrega;
 
-    private String avaliacao;
+    private BigDecimal avaliacao;
 
-
-    @Column(name = "data_cadastro")
-    private LocalDateTime dataCadastro;
-
-    @Column(nullable = true)
     private Boolean ativo;
 
     public void inativar() {
         this.ativo = false;
     }
-
-
 }
