@@ -1,75 +1,36 @@
 package com.deliverytech.delivery_api.service;
 
-import com.deliverytech.delivery_api.model.Restaurante;
-import com.deliverytech.delivery_api.repository.RestauranteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
-@Service
-@Transactional
-public class RestauranteService {
-    @Autowired
-    private RestauranteRepository restauranteRepository;
+import com.deliverytech.delivery_api.dto.request.RestauranteRequestDTO;
+import com.deliverytech.delivery_api.dto.response.RestauranteResponseDTO;
+import com.deliverytech.delivery_api.projection.RelatorioVendas;
 
-    public Restaurante cadastrar(Restaurante restaurante) {
-        validarDadosRestaurante(restaurante);
-        restaurante.setAtivo(true);
-        return restauranteRepository.save(restaurante);
-    }
+public interface RestauranteService {
 
-    @Transactional(readOnly = true)
-    public List<Restaurante> listarAtivos() {
-        return restauranteRepository.findByAtivoTrue();
-    }
+    RestauranteResponseDTO cadastrar(RestauranteRequestDTO dto);
 
-    @Transactional(readOnly = true)
-    public Optional<Restaurante> buscarPorId(Long id) {
-        return restauranteRepository.findById(id);
-    }
+    RestauranteResponseDTO buscarPorId(Long id);
 
-    public Restaurante atualizar(Long id, Restaurante restauranteAtualizado) {
-        Restaurante restaurante = buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Restaurante não encontrado: " + id));
+    RestauranteResponseDTO atualizar(Long id, RestauranteRequestDTO dto);
 
-        restaurante.setNome(restauranteAtualizado.getNome());
-        restaurante.setCategoria(restauranteAtualizado.getCategoria());
-        restaurante.setEndereco(restauranteAtualizado.getEndereco());
-        restaurante.setTelefone(restauranteAtualizado.getTelefone());
-        restaurante.setTaxaEntrega(restauranteAtualizado.getTaxaEntrega());
-        restaurante.setAvaliacao(restauranteAtualizado.getAvaliacao());
+    RestauranteResponseDTO ativarDesativarRestaurante(Long id);
 
-        return restauranteRepository.save(restaurante);
-    }
+    RestauranteResponseDTO buscarPorNome(String nome);
 
-    public void inativar(Long id) {
-        Restaurante restaurante = buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Restaurante não encontrado: " + id));
-        
-        restaurante.inativar();
-        restauranteRepository.save(restaurante);
-    }
+    List<RestauranteResponseDTO> buscarPorCategoria(String categoria);
 
-    @Transactional(readOnly = true)
-    public List<Restaurante> buscarPorCategoria(String categoria) {
-        return restauranteRepository.findByCategoria(categoria);
-    }
+    List<RestauranteResponseDTO> buscarPorPreco(BigDecimal precoMinimo, BigDecimal precoMaximo);
 
-    private void validarDadosRestaurante(Restaurante restaurante) {
-        if (restaurante.getNome() == null || restaurante.getNome().trim().isEmpty()) {
-            throw new IllegalArgumentException("Nome é obrigatório");
-        }
+    List<RestauranteResponseDTO> listarAtivos();
 
-        if (restaurante.getCategoria() == null || restaurante.getCategoria().trim().isEmpty()) {
-            throw new IllegalArgumentException("Categoria é obrigatória");
-        }
+    List<RestauranteResponseDTO> listarTop5PorNome();
 
-        if (restaurante.getTaxaEntrega() == null || restaurante.getTaxaEntrega().compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Taxa de entrega deve ser maior ou igual a zero");
-        }
-    }
+    List<RelatorioVendas> relatorioVendasPorRestaurante();
+
+    List<RestauranteResponseDTO> buscarPorTaxaEntrega(BigDecimal taxaEntrega);
+
+    RestauranteResponseDTO inativarRestaurante(Long id);
+    
 }
